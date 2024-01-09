@@ -78,11 +78,13 @@ public class Huesped {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Huesped(Huesped otroHuesped){
-        setNombre(otroHuesped.nombre);
-        setTelefono(otroHuesped.telefono);
-        setCorreo(otroHuesped.correo);
-        setDni(otroHuesped.dni);
+
+
+    public Huesped(Huesped huesped){
+        setNombre(huesped.nombre);
+        setTelefono(huesped.telefono);
+        setCorreo(huesped.correo);
+        setDni(huesped.dni);
         this.fechaNacimiento = fechaNacimiento;
     }
 
