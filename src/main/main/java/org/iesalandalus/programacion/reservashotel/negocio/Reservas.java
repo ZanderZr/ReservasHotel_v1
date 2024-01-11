@@ -1,9 +1,9 @@
-package org.iesalandalus.programacion.reservashotel.negocio;
+package main.java.org.iesalandalus.programacion.reservashotel.negocio;
 
-import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
-import org.iesalandalus.programacion.reservashotel.dominio.Huesped;
-import org.iesalandalus.programacion.reservashotel.dominio.Reserva;
-import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
+import main.java.org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
+import main.java.org.iesalandalus.programacion.reservashotel.dominio.Huesped;
+import main.java.org.iesalandalus.programacion.reservashotel.dominio.Reserva;
+import main.java.org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
 
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;

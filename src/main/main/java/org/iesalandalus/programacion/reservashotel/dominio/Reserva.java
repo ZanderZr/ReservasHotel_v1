@@ -1,4 +1,4 @@
-package org.iesalandalus.programacion.reservashotel.dominio;
+package main.java.org.iesalandalus.programacion.reservashotel.dominio;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

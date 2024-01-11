@@ -1,4 +1,4 @@
-package org.iesalandalus.programacion.reservashotel.vista;
+package main.java.org.iesalandalus.programacion.reservashotel.vista;
 
 public enum Opcion {
     SALIR("1.- Salir"),
