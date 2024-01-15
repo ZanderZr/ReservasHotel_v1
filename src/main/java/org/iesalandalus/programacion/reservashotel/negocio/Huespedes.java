@@ -37,9 +37,19 @@ public class Huespedes {
     }
 
     public void insertar(Huesped huesped) throws OperationNotSupportedException {
-        if (huesped != null && buscar(huesped) == null) {
-            coleccionHuespedes[tamano++] = huesped;
+        if (huesped == null) {
+            throw new IllegalArgumentException("No se puede insertar un huésped nulo.");
         }
+        if (buscar(huesped) != null) {
+            throw new OperationNotSupportedException("El huésped ya está registrado y no se admiten repetidos.");
+        }
+        if (tamanoSuperado()) {
+            throw new OperationNotSupportedException("No se pueden insertar más huéspedes, se ha alcanzado la capacidad máxima.");
+        }
+        if (capacidadSuperada()) {
+            throw new IllegalStateException("Se ha superado la capacidad máxima, esto no debería ocurrir.");
+        }
+        coleccionHuespedes[tamano++] = huesped;
     }
 
     public Huesped buscar(Huesped huesped) {
@@ -68,11 +78,11 @@ public class Huespedes {
         return -1;
     }
 
-    private boolean tamanoSuperado(int indice) {
-        return tamano > indice;
+    private boolean tamanoSuperado() {
+        return tamano >= capacidad;
     }
 
-    private boolean capacidadSuperada(int indice) {
+    private boolean capacidadSuperada() {
         return tamano > capacidad;
     }
 

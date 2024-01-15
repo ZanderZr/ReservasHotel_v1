@@ -21,9 +21,9 @@ import java.util.List;
 public class MainApp {
 
     public static final int CAPACIDAD = 45;
-    private Huespedes huespedes;
-    private Habitaciones habitaciones;
-    private Reservas reservas;
+    private Huespedes huespedes = new Huespedes(CAPACIDAD);
+    private Habitaciones habitaciones = new Habitaciones(CAPACIDAD);
+    private Reservas reservas = new Reservas(CAPACIDAD);
 
     public static void main(String[] args) {
         MainApp app = new MainApp();
@@ -236,7 +236,7 @@ public class MainApp {
     }
 
     private void anularReserva() {
-        System.out.println("Introduce el DNI del huésped para anular su reserva:");
+        System.out.println("Anular su reserva:");
         Huesped huespedFicticio = Consola.leerClientePorDni();
         Reserva[] reservasAnulables = getReservasAnulables(reservas.getReservas(huespedFicticio));
 
@@ -298,7 +298,8 @@ public class MainApp {
                 }
             }
         }
-        return null; // No se encontró ninguna habitación disponible
+        System.out.println("Esa habitacion no está disponible.");
+        return null;
     }
 
 }

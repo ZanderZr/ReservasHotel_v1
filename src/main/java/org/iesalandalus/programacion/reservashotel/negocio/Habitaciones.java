@@ -37,9 +37,19 @@ public class Habitaciones {
     }
 
     public void insertar(Habitacion habitacion) throws OperationNotSupportedException {
-        if (habitacion != null && buscar(habitacion) == null) {
-            coleccionHabitaciones[tamano++] = habitacion;
+        if (habitacion == null) {
+            throw new IllegalArgumentException("No se puede insertar una habitación nula.");
         }
+        if (buscar(habitacion) != null) {
+            throw new OperationNotSupportedException("La habitación ya existe y no se admiten repetidos.");
+        }
+        if (tamanoSuperado()) {
+            throw new OperationNotSupportedException("No se pueden insertar más habitaciones, se ha alcanzado la capacidad máxima.");
+        }
+        if (capacidadSuperada()) {
+            throw new IllegalStateException("Se ha superado la capacidad máxima, esto no debería ocurrir.");
+        }
+        coleccionHabitaciones[tamano++] = habitacion;
     }
 
     public Habitacion buscar(Habitacion habitacion) {
@@ -68,11 +78,11 @@ public class Habitaciones {
         return -1;
     }
 
-    private boolean tamanoSuperado(int indice) {
-        return tamano > indice;
+    private boolean tamanoSuperado() {
+        return tamano >= capacidad;
     }
 
-    private boolean capacidadSuperada(int indice) {
+    private boolean capacidadSuperada() {
         return tamano > capacidad;
     }
 

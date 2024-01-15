@@ -207,10 +207,10 @@ public class Consola {
         Regimen regimen = leerRegimen();
         LocalDate fechaInicioReserva = leerFecha("Introduce la fecha de inicio de la reserva:");
         LocalDate fechaFinReserva = leerFecha("Introduce la fecha de fin de la reserva:");
-
         System.out.println("Numero de personas:");
         int numeroPersonas = Entrada.entero();
 
-        return new Reserva(huesped,habitacion,regimen,fechaInicioReserva,fechaFinReserva,numeroPersonas);
+
+        return new Reserva(huesped,habitacion,regimen,fechaInicioReserva,fechaFinReserva, numeroPersonas);
     }
 }

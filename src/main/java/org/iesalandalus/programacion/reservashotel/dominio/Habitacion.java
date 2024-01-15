@@ -32,15 +32,13 @@ public class Habitacion {
     }
 
     public Habitacion(Habitacion habitacion) {
-        this.identificador = habitacion.identificador;
-        this.planta = habitacion.planta;
-        this.puerta = habitacion.puerta;
-        this.precio = habitacion.precio;
-        this.tipoHabitacion = habitacion.tipoHabitacion;
+        setIdentificador(habitacion.identificador);
+        setPlanta(habitacion.planta);
+        setPuerta(habitacion.puerta);
+        setPrecio(habitacion.precio);
+        setTipoHabitacion(habitacion.tipoHabitacion);
 
     }
-
-
 
     public String getIdentificador() {
         return identificador;

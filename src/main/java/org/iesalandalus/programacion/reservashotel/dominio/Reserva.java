@@ -30,6 +30,7 @@ public class Reserva {
         setRegimen(regimen);
         setFechaInicioReserva(fechaInicioReserva);
         setFechaFinReserva(fechaFinReserva);
+        setPrecio();
         setNumeroPersonas(numeroPersonas);
     }
 
@@ -39,6 +40,7 @@ public class Reserva {
         setRegimen(reserva.regimen);
         setFechaInicioReserva(reserva.fechaInicioReserva);
         setFechaFinReserva(reserva.fechaFinReserva);
+        setPrecio();
         setNumeroPersonas(reserva.numeroPersonas);
     }
 

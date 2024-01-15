@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class Huesped {
 
-    private static final String ER_TELEFONO = "^\\d{9}$";
+    private static final String ER_TELEFONO = "^[6789]\\d{8}$";
     private static final String ER_CORREO = "^([a-zA-Z0-9._%-]+)@([a-zA-Z0-9.-]+).([a-zA-Z]{2,6})$";
     private static final String ER_DNI = "(\\d{8})([A-Z])";
     public static final String FORMATO_FECHA = "dd/MM/yyyy";

@@ -41,9 +41,19 @@ public class Reservas {
     }
 
     public void insertar(Reserva reserva) throws OperationNotSupportedException {
-        if (reserva != null && buscar(reserva) == null) {
-            coleccionReservas[tamano++] = reserva;
+        if (reserva == null) {
+            throw new IllegalArgumentException("No se puede insertar una reserva nula.");
         }
+        if (buscar(reserva) != null) {
+            throw new OperationNotSupportedException("La reserva ya está registrada y no se admiten repetidos.");
+        }
+        if (tamanoSuperado()) {
+            throw new OperationNotSupportedException("No se pueden insertar más reservas, se ha alcanzado la capacidad máxima.");
+        }
+        if (capacidadSuperada()) {
+            throw new IllegalStateException("Se ha superado la capacidad máxima, esto no debería ocurrir.");
+        }
+        coleccionReservas[tamano++] = reserva;
     }
 
     public Reserva buscar(Reserva reserva) {
@@ -72,11 +82,11 @@ public class Reservas {
         return -1;
     }
 
-    private boolean tamanoSuperado(int indice) {
-        return tamano > indice;
+    private boolean tamanoSuperado() {
+        return tamano >= capacidad;
     }
 
-    private boolean capacidadSuperada(int indice) {
+    private boolean capacidadSuperada() {
         return tamano > capacidad;
     }
 
