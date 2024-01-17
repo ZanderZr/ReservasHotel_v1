@@ -1,9 +1,6 @@
 package org.iesalandalus.programacion.reservashotel;
 
-import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
-import org.iesalandalus.programacion.reservashotel.dominio.Huesped;
-import org.iesalandalus.programacion.reservashotel.dominio.Reserva;
-import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
+import org.iesalandalus.programacion.reservashotel.dominio.*;
 import org.iesalandalus.programacion.reservashotel.negocio.Habitaciones;
 import org.iesalandalus.programacion.reservashotel.negocio.Huespedes;
 import org.iesalandalus.programacion.reservashotel.negocio.Reservas;
@@ -30,7 +27,6 @@ public class MainApp {
     public static void main(String[] args) throws OperationNotSupportedException {
         MainApp app = new MainApp();
         Opcion opcion;
-        app.pruebas();
         do {
             Consola.mostrarMenu();
             opcion = Consola.elegirOpcion();
@@ -39,12 +35,7 @@ public class MainApp {
         System.out.println("Gracias por utilizar nuestra aplicación. ¡Hasta pronto!");
     }
 
- public void pruebas() throws OperationNotSupportedException {
-     Huesped hue = new Huesped("jojo", "666777888", "jojo@gmail.com", "76660251D", LocalDate.of(1994, Month.JANUARY, 31));
-     Habitacion hab = new Habitacion(2, 2, 50, TipoHabitacion.TRIPLE);
-     huespedes.insertar(hue);
-     habitaciones.insertar(hab);
- }
+
     private void ejecutarOpcion(Opcion opcion) {
 
         switch (opcion) {
