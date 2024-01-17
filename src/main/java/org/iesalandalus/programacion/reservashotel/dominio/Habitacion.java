@@ -26,7 +26,6 @@ public class Habitacion {
         setPlanta(planta);
         setPuerta(puerta);
         setPrecio(precio);
-
         setTipoHabitacion(tipoHabitacion);
         setIdentificador();
     }
@@ -57,6 +56,7 @@ public class Habitacion {
     }
 
     private void setPlanta(int planta) {
+
         if (planta < MIN_NUMERO_PLANTA || planta > MAX_NUMERO_PLANTA) {
             throw new IllegalArgumentException("Número de planta no válido.");
         } else {

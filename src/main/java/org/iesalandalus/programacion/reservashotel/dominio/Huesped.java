@@ -19,7 +19,7 @@ public class Huesped {
 
     public void setNombre(String nombre) {
         if (nombre == null || !nombre.matches("^([A-Z][a-z]*)(\\s[A-Z][a-z]*)*$")) {
-            nombre = formateaNombre(nombre);
+            throw new IllegalArgumentException("Nombre no válido");
         }
         this.nombre = nombre;
     }
@@ -70,23 +70,21 @@ public class Huesped {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Huesped(String nombre, String telefono, String correo,
-                   String dni, LocalDate fechaNacimiento) {
-        setNombre(nombre);
+    public Huesped(String nombre, String telefono, String correo, String dni, LocalDate fechaNacimiento) {
+        setNombre(formateaNombre(nombre));
         setTelefono(telefono);
         setCorreo(correo);
         setDni(dni);
-        this.fechaNacimiento = fechaNacimiento;
+        setFechaNacimiento(fechaNacimiento);
     }
 
 
-
-    public Huesped(Huesped huesped){
-        setNombre(huesped.nombre);
+    public Huesped(Huesped huesped) {
+        setNombre(formateaNombre(huesped.nombre));
         setTelefono(huesped.telefono);
         setCorreo(huesped.correo);
         setDni(huesped.dni);
-        this.fechaNacimiento = fechaNacimiento;
+        setFechaNacimiento(huesped.fechaNacimiento);
     }
 
     private static String formateaNombre(String nombre) {
@@ -108,11 +106,23 @@ public class Huesped {
         Pattern pattern = Pattern.compile(ER_DNI);
         Matcher matcher = pattern.matcher(dni);
 
-        if (matcher.matches()) {
-            String numero = matcher.group(1);
-            String letra = matcher.group(2);
-            return true;
-        } else {
+        try {
+            if (matcher.matches()) {
+                String numero = matcher.group(1);
+                String letra = matcher.group(2);
+                int indice = Integer.parseInt(numero) % 23;
+                char letraCorrecta = "TRWAGMYFPDXBNJZSQVHLCKE".charAt(indice); // Letras válidas
+                return letra.charAt(0) == letraCorrecta;
+            } else {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Error: El número del DNI no es válido.");
+            e.printStackTrace();
+            return false;
+        } catch (IllegalStateException e) {
+            System.err.println("Error: No se pudo procesar el DNI.");
+            e.printStackTrace();
             return false;
         }
     }
@@ -132,13 +142,7 @@ public class Huesped {
 
     @Override
     public String toString() {
-        return "Huesped{" +
-                "nombre='" + nombre + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", correo='" + correo + '\'' +
-                ", dni='" + dni + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
-                '}';
+        return "Huesped{" + "nombre='" + nombre + '\'' + ", telefono='" + telefono + '\'' + ", correo='" + correo + '\'' + ", dni='" + dni + '\'' + ", fechaNacimiento=" + fechaNacimiento + '}';
     }
 
     @Override

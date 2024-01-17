@@ -30,8 +30,9 @@ public class Reserva {
         setRegimen(regimen);
         setFechaInicioReserva(fechaInicioReserva);
         setFechaFinReserva(fechaFinReserva);
-        setPrecio();
         setNumeroPersonas(numeroPersonas);
+        setPrecio();
+
     }
 
     public Reserva(Reserva reserva){
@@ -40,8 +41,9 @@ public class Reserva {
         setRegimen(reserva.regimen);
         setFechaInicioReserva(reserva.fechaInicioReserva);
         setFechaFinReserva(reserva.fechaFinReserva);
-        setPrecio();
         setNumeroPersonas(reserva.numeroPersonas);
+        setPrecio();
+
     }
 
     public Huesped getHuesped() {
@@ -130,12 +132,28 @@ public class Reserva {
     }
 
     private void setPrecio() {
+        if (habitacion == null || regimen == null || fechaInicioReserva == null || fechaFinReserva == null) {
+            throw new IllegalArgumentException("Los datos de la reserva no están completos.");
+        }
+
         double precioHabitacion = habitacion.getPrecio();
         double incrementoPrecio = regimen.getIncrementoPrecio();
         long numeroNoches = ChronoUnit.DAYS.between(fechaInicioReserva, fechaFinReserva);
 
-        this.precio = ((incrementoPrecio * numeroPersonas) + precioHabitacion) * numeroNoches;
+        if (numeroNoches < 0) {
+            throw new IllegalArgumentException("La fecha de inicio de la reserva debe ser anterior a la fecha de fin.");
+        }
+
+        if (numeroPersonas <= 0) {
+            throw new IllegalArgumentException("El número de personas debe ser mayor que cero.");
+        }
+        if(incrementoPrecio!= 0) {
+            this.precio = ((incrementoPrecio * numeroPersonas) + precioHabitacion) * numeroNoches;
+        } else {
+            this.precio = (numeroPersonas + precioHabitacion) * numeroNoches;
+        }
     }
+
 
     public void setNumeroPersonas(int numeroPersonas) {
         if (numeroPersonas > habitacion.getTipoHabitacion().getNumeroMaximoPersonas()) {

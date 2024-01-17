@@ -8,6 +8,7 @@ import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class Reservas {
 
@@ -56,7 +57,7 @@ public class Reservas {
         coleccionReservas[tamano++] = reserva;
     }
 
-    public Reserva buscar(Reserva reserva) {
+    public Reserva buscar(Reserva reserva) throws NoSuchElementException {
         for (int i = 0; i < tamano; i++) {
             if (coleccionReservas[i].equals(reserva)) {
                 return coleccionReservas[i];
@@ -65,15 +66,17 @@ public class Reservas {
         return null;
     }
 
-    public void borrar(Reserva reserva) {
+    public void borrar(Reserva reserva) throws NoSuchElementException {
         int indice = buscarIndice(reserva);
         if (indice != -1) {
             desplazarUnaPosicionHaciaIzquierda(indice);
             tamano--;
+        } else {
+            throw new NoSuchElementException("La reserva a borrar no se encuentra en la colección.");
         }
     }
 
-    private int buscarIndice(Reserva reserva) {
+    private int buscarIndice(Reserva reserva) throws NoSuchElementException {
         for (int i = 0; i < tamano; i++) {
             if (coleccionReservas[i].equals(reserva)) {
                 return i;
@@ -81,6 +84,7 @@ public class Reservas {
         }
         return -1;
     }
+
 
     private boolean tamanoSuperado() {
         return tamano >= capacidad;
@@ -91,6 +95,9 @@ public class Reservas {
     }
 
     private void desplazarUnaPosicionHaciaIzquierda(int indice) {
+        if (indice < 0 || indice >= tamano) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango.");
+        }
         for (int i = indice; i < tamano - 1; i++) {
             coleccionReservas[i] = coleccionReservas[i + 1];
         }
@@ -104,6 +111,9 @@ public class Reservas {
                 reservasHuesped[contador++] = new Reserva(coleccionReservas[i]);
             }
         }
+        if (contador == 0) {
+            throw new NoSuchElementException("No se encontraron reservas para el huésped proporcionado.");
+        }
         return Arrays.copyOf(reservasHuesped, contador);
     }
 
@@ -114,6 +124,9 @@ public class Reservas {
             if (coleccionReservas[i].getHabitacion().getTipoHabitacion().equals(tipoHabitacion)) {
                 reservasTipoHabitacion[contador++] = new Reserva(coleccionReservas[i]);
             }
+        }
+        if (contador == 0) {
+            throw new NoSuchElementException("No se encontraron reservas para el tipo de habitación proporcionado.");
         }
         return Arrays.copyOf(reservasTipoHabitacion, contador);
     }
@@ -126,8 +139,10 @@ public class Reservas {
                 reservasFuturas[contador++] = new Reserva(coleccionReservas[i]);
             }
         }
+        if (contador == 0) {
+            throw new NoSuchElementException("No se encontraron reservas futuras para la habitación proporcionada.");
+        }
         return Arrays.copyOf(reservasFuturas, contador);
     }
-
 
 }

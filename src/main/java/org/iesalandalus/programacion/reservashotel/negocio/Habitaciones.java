@@ -1,9 +1,8 @@
 package org.iesalandalus.programacion.reservashotel.negocio;
 
 import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
-import org.iesalandalus.programacion.reservashotel.dominio.Huesped;
-
 import javax.naming.OperationNotSupportedException;
+import java.util.NoSuchElementException;
 
 public class Habitaciones {
 
@@ -11,7 +10,7 @@ public class Habitaciones {
     private int tamano;
     private Habitacion[] coleccionHabitaciones;
 
-    public Habitaciones(int capacidad){
+    public Habitaciones(int capacidad) {
         this.capacidad = capacidad;
         this.coleccionHabitaciones = new Habitacion[capacidad];
     }
@@ -61,11 +60,14 @@ public class Habitaciones {
         return null;
     }
 
-    public void borrar(Habitacion habitacion) {
+
+    public void borrar(Habitacion habitacion) throws NoSuchElementException {
         int indice = buscarIndice(habitacion);
         if (indice != -1) {
             desplazarUnaPosicionHaciaIzquierda(indice);
             tamano--;
+        } else {
+            throw new NoSuchElementException("La habitación proporcionada no se encuentra en la colección.");
         }
     }
 
@@ -77,6 +79,7 @@ public class Habitaciones {
         }
         return -1;
     }
+
 
     private boolean tamanoSuperado() {
         return tamano >= capacidad;

@@ -14,8 +14,10 @@ import org.iesalandalus.programacion.utilidades.Entrada;
 
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 public class MainApp {
@@ -25,9 +27,10 @@ public class MainApp {
     private Habitaciones habitaciones = new Habitaciones(CAPACIDAD);
     private Reservas reservas = new Reservas(CAPACIDAD);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws OperationNotSupportedException {
         MainApp app = new MainApp();
         Opcion opcion;
+        app.pruebas();
         do {
             Consola.mostrarMenu();
             opcion = Consola.elegirOpcion();
@@ -36,7 +39,12 @@ public class MainApp {
         System.out.println("Gracias por utilizar nuestra aplicación. ¡Hasta pronto!");
     }
 
-
+ public void pruebas() throws OperationNotSupportedException {
+     Huesped hue = new Huesped("jojo", "666777888", "jojo@gmail.com", "76660251D", LocalDate.of(1994, Month.JANUARY, 31));
+     Habitacion hab = new Habitacion(2, 2, 50, TipoHabitacion.TRIPLE);
+     huespedes.insertar(hue);
+     habitaciones.insertar(hab);
+ }
     private void ejecutarOpcion(Opcion opcion) {
 
         switch (opcion) {
@@ -68,40 +76,50 @@ public class MainApp {
         }
     }
 
-
-    private void insertarHuesped() {
-        Huesped nuevoHuesped = Consola.leerHuesped();
-        if (huespedes.buscar(nuevoHuesped) == null) {
-            try {
-                huespedes.insertar(nuevoHuesped);
-                System.out.println("Huésped insertado correctamente.");
-            } catch (OperationNotSupportedException e) {
-                System.out.println("Error al insertar el huésped: " + e.getMessage());
+    public void insertarHuesped() {
+        try {
+            Huesped nuevoHuesped = Consola.leerHuesped();
+            if (huespedes.buscar(nuevoHuesped) == null) {
+                try {
+                    huespedes.insertar(nuevoHuesped);
+                    System.out.println("Huésped insertado correctamente.");
+                } catch (OperationNotSupportedException e) {
+                    System.out.println("Error al insertar el huésped: " + e.getMessage());
+                }
+            } else {
+                System.out.println("El huésped ya está registrado en el sistema.");
             }
-        } else {
-            System.out.println("El huésped ya está registrado en el sistema.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al leer el huésped: " + e.getMessage());
         }
     }
 
-
     private void buscarHuesped() {
-        Huesped huespedFicticio = Consola.leerClientePorDni();
-        Huesped huespedEncontrado = huespedes.buscar(huespedFicticio);
-        if (huespedEncontrado != null) {
-            System.out.println("Huésped encontrado: " + huespedEncontrado);
-        } else {
-            System.out.println("No se encontró ningún huésped con el DNI proporcionado.");
+        try {
+            Huesped huespedFicticio = Consola.getHuespedPorDni();
+            Huesped huespedEncontrado = huespedes.buscar(huespedFicticio);
+            if (huespedEncontrado != null) {
+                System.out.println("Huésped encontrado: " + huespedEncontrado);
+            } else {
+                System.out.println("No se encontró ningún huésped con el DNI proporcionado.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al buscar el huésped: " + e.getMessage());
         }
     }
 
     private void borrarHuesped() {
-        Huesped huespedFicticio = Consola.leerClientePorDni();
-        Huesped huespedBorrado = huespedes.buscar(huespedFicticio);
-        if (huespedBorrado != null) {
-            huespedes.borrar(huespedBorrado);
-            System.out.println("Huésped borrado: " + huespedBorrado);
-        } else {
-            System.out.println("No se encontró ningún huésped con el DNI proporcionado.");
+        try {
+            Huesped huespedFicticio = Consola.getHuespedPorDni();
+            Huesped huespedBorrado = huespedes.buscar(huespedFicticio);
+            if (huespedBorrado != null) {
+                huespedes.borrar(huespedBorrado);
+                System.out.println("Huésped borrado: " + huespedBorrado);
+            } else {
+                System.out.println("No se encontró ningún huésped con el DNI proporcionado.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al buscar el huésped: " + e.getMessage());
         }
     }
 
@@ -118,38 +136,52 @@ public class MainApp {
     }
 
     private void insertarHabitacion() {
-        Habitacion nuevaHabitacion = Consola.leerHabitacion();
+        try {
+            Habitacion nuevaHabitacion = Consola.leerHabitacion();
 
-        if( habitaciones.buscar(nuevaHabitacion) == null){
-            try{
-                habitaciones.insertar(nuevaHabitacion);
-                System.out.println("Habitacion insertada correctamente.");
-            } catch (OperationNotSupportedException e) {
-                System.out.println("Error al insertar la habitacion: " + e.getMessage());
+            if (habitaciones.buscar(nuevaHabitacion) == null) {
+                try {
+                    habitaciones.insertar(nuevaHabitacion);
+                    System.out.println("Habitacion insertada correctamente.");
+                } catch (OperationNotSupportedException e) {
+                    System.out.println("Error al insertar la habitacion: " + e.getMessage());
+                }
+            } else {
+                System.out.println("La habitacion ya está registrada en el sistema.");
             }
-        } else {
-            System.out.println("La habitacion ya está registrada en el sistema.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al leer la habitación: " + e.getMessage());
         }
     }
 
     private void buscarHabitacion() {
-        Habitacion habitacionFicticia = Consola.leerHabitacionPorIdentificador();
-        Habitacion habitacionEncontrada = habitaciones.buscar(habitacionFicticia);
-        if(habitacionEncontrada != null){
-            System.out.println("Habitación encontrada: " + habitacionEncontrada);
-        } else {
-            System.out.println("No se encontro ninguna habitacion con el identificador proporcionado.");
+        try {
+            Habitacion habitacionFicticia = Consola.leerHabitacionPorIdentificador();
+            Habitacion habitacionEncontrada = habitaciones.buscar(habitacionFicticia);
+            if (habitacionEncontrada != null) {
+                System.out.println("Habitación encontrada: " + habitacionEncontrada);
+            } else {
+                System.out.println("La habitación buscada no se encuentra en la colección.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al buscar la habitación: " + e.getMessage());
         }
     }
 
+
+
     private void borrarHabitacion() {
-        Habitacion habitacionFicticia = Consola.leerHabitacionPorIdentificador();
-        Habitacion habitacionBorrada = habitaciones.buscar(habitacionFicticia);
-        if(habitacionBorrada != null){
-            habitaciones.borrar(habitacionBorrada);
-            System.out.println("Habitacion borrada: " + habitacionBorrada);
-        } else{
-            System.out.println("No se encontro ninguna habitacion con el identificador proporcionado.");
+        try {
+            Habitacion habitacionFicticia = Consola.leerHabitacionPorIdentificador();
+            Habitacion habitacionBorrada = habitaciones.buscar(habitacionFicticia);
+            if (habitacionBorrada != null) {
+                habitaciones.borrar(habitacionBorrada);
+                System.out.println("Habitacion borrada: " + habitacionBorrada);
+            } else {
+                System.out.println("No se encontro ninguna habitacion con el identificador proporcionado.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al buscar la habitación: " + e.getMessage());
         }
     }
 
@@ -165,26 +197,54 @@ public class MainApp {
     }
 
     private void insertarReserva() {
-        Reserva nuevaReserva = Consola.leerReserva();
-        Habitacion habitacionDeseada = nuevaReserva.getHabitacion();
-        Habitacion habitacionDisponible = consultarDisponibilidad(habitacionDeseada.getTipoHabitacion(), nuevaReserva.getFechaInicioReserva(), nuevaReserva.getFechaFinReserva());
+        try {
+            Reserva reservaFicticia = Consola.leerReserva();
 
-        if (habitacionDisponible != null) {
-            nuevaReserva.setHabitacion(habitacionDisponible);
-            if (reservas.buscar(nuevaReserva) == null) {
-                try {
-                    reservas.insertar(nuevaReserva);
-                    System.out.println("Reserva insertada correctamente.");
-                } catch (OperationNotSupportedException e) {
-                    System.out.println("Error al insertar la reserva: " + e.getMessage());
+            if (reservaFicticia == null) {
+                System.out.println("No se pudo leer la reserva.");
+                return;
+            }
+
+            Huesped huespedFicticio = reservaFicticia.getHuesped();
+            Habitacion habitacionFicticia = reservaFicticia.getHabitacion();
+
+            Huesped huespedReal = huespedes.buscar(huespedFicticio);
+            Habitacion habitacionReal = habitaciones.buscar(habitacionFicticia);
+
+            if (huespedReal == null) {
+                throw new NoSuchElementException("El huésped con el DNI proporcionado no se encuentra en el sistema.");
+            }
+
+            if (habitacionReal == null) {
+                throw new NoSuchElementException("La habitación con el identificador proporcionado no se encuentra en el sistema.");
+            }
+
+            Reserva nuevaReserva = new Reserva(huespedReal, habitacionReal, reservaFicticia.getRegimen(),
+                    reservaFicticia.getFechaInicioReserva(), reservaFicticia.getFechaFinReserva(), reservaFicticia.getNumeroPersonas());
+
+            Habitacion habitacionDeseada = nuevaReserva.getHabitacion();
+            Habitacion habitacionDisponible = consultarDisponibilidad(habitacionDeseada.getTipoHabitacion(), nuevaReserva.getFechaInicioReserva(), nuevaReserva.getFechaFinReserva());
+
+            if (habitacionDisponible != null) {
+                nuevaReserva.setHabitacion(habitacionDisponible);
+                if (reservas.buscar(nuevaReserva) == null) {
+                    try {
+                        reservas.insertar(nuevaReserva);
+                        System.out.println("Reserva insertada correctamente.");
+                    } catch (OperationNotSupportedException e) {
+                        System.out.println("Error al insertar la reserva: " + e.getMessage());
+                    }
+                } else {
+                    System.out.println("La reserva ya está registrada en el sistema.");
                 }
             } else {
-                System.out.println("La reserva ya está registrada en el sistema.");
+                System.out.println("No hay disponibilidad para el tipo de habitación deseada en el periodo indicado.");
             }
-        } else {
-            System.out.println("No hay disponibilidad para el tipo de habitación deseada en el periodo indicado.");
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
         }
     }
+
 
 
     private void listarReservas(Huesped huesped) {
@@ -236,37 +296,44 @@ public class MainApp {
     }
 
     private void anularReserva() {
-        System.out.println("Anular su reserva:");
-        Huesped huespedFicticio = Consola.leerClientePorDni();
-        Reserva[] reservasAnulables = getReservasAnulables(reservas.getReservas(huespedFicticio));
+        try {
+            System.out.println("Anular su reserva:");
+            Huesped huespedFicticio = Consola.getHuespedPorDni();
+            Reserva[] reservasAnulables = getReservasAnulables(reservas.getReservas(huespedFicticio));
 
-        if (reservasAnulables.length == 0) {
-            System.out.println("El huésped no tiene reservas anulables.");
-        } else if (reservasAnulables.length == 1) {
-            System.out.println("El huésped tiene una reserva anulable: " + reservasAnulables[0]);
-            System.out.println("¿Desea anular esta reserva? (S/N):");
-            String respuesta = Entrada.cadena();
-            if (respuesta.equalsIgnoreCase("S")) {
-                reservas.borrar(reservasAnulables[0]);
-                System.out.println("La reserva ha sido anulada.");
+            if (reservasAnulables.length == 0) {
+                throw new NoSuchElementException("El huésped no tiene reservas anulables.");
+            } else if (reservasAnulables.length == 1) {
+                System.out.println("El huésped tiene una reserva anulable: " + reservasAnulables[0]);
+                System.out.println("¿Desea anular esta reserva? (S/N):");
+                String respuesta = Entrada.cadena();
+                if (respuesta.equalsIgnoreCase("S")) {
+                    reservas.borrar(reservasAnulables[0]);
+                    System.out.println("La reserva ha sido anulada.");
+                } else {
+                    System.out.println("Anulación cancelada.");
+                }
             } else {
-                System.out.println("Anulación cancelada.");
+                System.out.println("El huésped tiene varias reservas anulables:");
+                for (int i = 0; i < reservasAnulables.length; i++) {
+                    System.out.println((i + 1) + ".- " + reservasAnulables[i]);
+                }
+                System.out.println("Introduce el número de la reserva que deseas anular:");
+                int indice = Entrada.entero() - 1;
+                if (indice >= 0 && indice < reservasAnulables.length) {
+                    reservas.borrar(reservasAnulables[indice]);
+                    System.out.println("La reserva seleccionada ha sido anulada.");
+                } else {
+                    System.out.println("Número de reserva no válido.");
+                }
             }
-        } else {
-            System.out.println("El huésped tiene varias reservas anulables:");
-            for (int i = 0; i < reservasAnulables.length; i++) {
-                System.out.println((i + 1) + ".- " + reservasAnulables[i]);
-            }
-            System.out.println("Introduce el número de la reserva que deseas anular:");
-            int indice = Entrada.entero() - 1;
-            if (indice >= 0 && indice < reservasAnulables.length) {
-                reservas.borrar(reservasAnulables[indice]);
-                System.out.println("La reserva seleccionada ha sido anulada.");
-            } else {
-                System.out.println("Número de reserva no válido.");
-            }
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ha ocurrido un error al anular la reserva: " + e.getMessage());
         }
     }
+
 
 
     public void mostrarReservas() {

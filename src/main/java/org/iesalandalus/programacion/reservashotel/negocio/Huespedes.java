@@ -3,6 +3,7 @@ package org.iesalandalus.programacion.reservashotel.negocio;
 import org.iesalandalus.programacion.reservashotel.dominio.Huesped;
 
 import javax.naming.OperationNotSupportedException;
+import java.util.NoSuchElementException;
 
 public class Huespedes {
 
@@ -52,7 +53,7 @@ public class Huespedes {
         coleccionHuespedes[tamano++] = huesped;
     }
 
-    public Huesped buscar(Huesped huesped) {
+    public Huesped buscar(Huesped huesped) throws NoSuchElementException {
         for (int i = 0; i < tamano; i++) {
             if (coleccionHuespedes[i].equals(huesped)) {
                 return coleccionHuespedes[i];
@@ -61,15 +62,17 @@ public class Huespedes {
         return null;
     }
 
-    public void borrar(Huesped huesped) {
+    public void borrar(Huesped huesped) throws NoSuchElementException {
         int indice = buscarIndice(huesped);
         if (indice != -1) {
             desplazarUnaPosicionHaciaIzquierda(indice);
             tamano--;
+        } else {
+            throw new NoSuchElementException("El huésped a borrar no se encuentra en la colección.");
         }
     }
 
-    private int buscarIndice(Huesped huesped) {
+    private int buscarIndice(Huesped huesped) throws NoSuchElementException {
         for (int i = 0; i < tamano; i++) {
             if (coleccionHuespedes[i].equals(huesped)) {
                 return i;
@@ -77,6 +80,7 @@ public class Huespedes {
         }
         return -1;
     }
+
 
     private boolean tamanoSuperado() {
         return tamano >= capacidad;
