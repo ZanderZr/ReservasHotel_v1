@@ -86,7 +86,6 @@ public class Reservas {
         return -1;
     }
 
-
     private boolean tamanoSuperado() {
         return tamano >= capacidad;
     }
