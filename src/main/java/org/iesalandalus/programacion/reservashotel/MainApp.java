@@ -1,6 +1,5 @@
 package org.iesalandalus.programacion.reservashotel;
 
-import org.iesalandalus.programacion.reservashotel.dominio.*;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;

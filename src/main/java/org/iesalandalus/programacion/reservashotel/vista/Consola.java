@@ -1,10 +1,10 @@
 package org.iesalandalus.programacion.reservashotel.vista;
 
-import org.iesalandalus.programacion.reservashotel.dominio.*;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.*;
 import org.iesalandalus.programacion.utilidades.Entrada;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -120,7 +120,7 @@ public class Consola {
 
 
     public static LocalDate leerFecha(String mensaje) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Reserva.FORMATO_FECHA_RESERVA);
         LocalDate fecha = null;
         boolean fechaValida = false;
         while (!fechaValida) {
@@ -136,6 +136,22 @@ public class Consola {
         return fecha;
     }
 
+    public static LocalDateTime leerFechaHora(String mensaje) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Reserva.FORMATO_FECHA_HORA_RESERVA);
+        LocalDateTime fechaHora = null;
+        boolean fechaHoraValida = false;
+        while (!fechaHoraValida) {
+            try {
+                System.out.println(mensaje);
+                String fechaHoraString = Entrada.cadena();
+                fechaHora = LocalDateTime.parse(fechaHoraString, formatter);
+                fechaHoraValida = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Fecha no válida. Por favor, introduce la fecha en el formato dd/MM/yyyy HH:hh.");
+            }
+        }
+        return fechaHora;
+    }
 
     public static Habitacion leerHabitacion() throws IllegalArgumentException {
         System.out.println("Introduce los datos de una nueva habitación:");
