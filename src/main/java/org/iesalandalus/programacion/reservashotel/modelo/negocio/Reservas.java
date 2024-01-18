@@ -1,12 +1,13 @@
-package org.iesalandalus.programacion.reservashotel.negocio;
+package org.iesalandalus.programacion.reservashotel.modelo.negocio;
 
-import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
-import org.iesalandalus.programacion.reservashotel.dominio.Huesped;
-import org.iesalandalus.programacion.reservashotel.dominio.Reserva;
-import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
 
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -143,6 +144,32 @@ public class Reservas {
             throw new NoSuchElementException("No se encontraron reservas futuras para la habitación proporcionada.");
         }
         return Arrays.copyOf(reservasFuturas, contador);
+    }
+
+    public void realizarCheckin(Reserva reserva, LocalDateTime fechaHora) {
+        try {
+            Reserva reservaEncontrada = buscar(reserva);
+            if (reservaEncontrada != null) {
+                reservaEncontrada.setCheckIn(fechaHora);
+            } else {
+                throw new NoSuchElementException("La reserva no se encuentra en la colección.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al realizar el check-in: " + e.getMessage());
+        }
+    }
+
+    public void realizarCheckout(Reserva reserva, LocalDateTime fechaHora) {
+        try {
+            Reserva reservaEncontrada = buscar(reserva);
+            if (reservaEncontrada != null) {
+                reservaEncontrada.setCheckOut(fechaHora);
+            } else {
+                throw new NoSuchElementException("La reserva no se encuentra en la colección.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al realizar el check-out: " + e.getMessage());
+        }
     }
 
 }
