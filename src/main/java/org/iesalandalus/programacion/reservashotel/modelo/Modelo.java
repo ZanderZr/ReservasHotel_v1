@@ -51,7 +51,7 @@ public class Modelo {
         if (huespedEncontrado == null) {
             throw new NoSuchElementException("El huesped buscado no existe.");
         }
-        return huespedes.buscar(huesped);
+        return huespedEncontrado;
     }
 
     public void borrar(Huesped huesped) throws OperationNotSupportedException {
@@ -164,14 +164,17 @@ public class Modelo {
             return null;
         }
     }
-
+    public Reserva[] getReservas(Huesped huesped){
+        return reservas.getReservas(huesped);
+    }
+    /*
     public Reserva[] getReservas(Huesped huesped) {
         try {
             Reserva[] original = reservas.get();
             Reserva[] copia = new Reserva[original.length];
             int indice = 0;
             for (Reserva reserva : original) {
-                if (reserva.getHuesped() == huesped) {
+                if (reserva.getHuesped().equals(huesped)) {
                     copia[indice++] = new Reserva(reserva);
                 }
             }
@@ -181,7 +184,11 @@ public class Modelo {
             return null;
         }
     }
-
+     */
+    public Reserva[] getReservas(TipoHabitacion tipoHabitacion){
+        return reservas.getReservas(tipoHabitacion);
+    }
+    /*
     public Reserva[] getReservas(TipoHabitacion tipoHabitacion) {
         try {
             Reserva[] original = reservas.get();
@@ -198,15 +205,20 @@ public class Modelo {
             return null;
         }
     }
-
-    public Reserva[] getReservasFuturas(Habitacion habitacion) {
+     */
+    public Reserva[] getReservasFuturas(Habitacion habitacion){
+       return reservas.getReservasFuturas(habitacion);
+    }
+   /* public Reserva[] getReservasFuturas(Habitacion habitacion) {
         try {
             Reserva[] original = reservas.get();
             Reserva[] copia = new Reserva[original.length];
             int indice = 0;
             for (Reserva reserva : original) {
                 if (reserva.getHabitacion() == habitacion) {
+                    if(reserva.getFechaInicioReserva().isAfter(LocalDate.now())){
                     copia[indice++] = new Reserva(reserva);
+                    }
                 }
             }
             return copia;
@@ -215,6 +227,7 @@ public class Modelo {
             return null;
         }
     }
+    */
 
    public void realizarCheckin (Reserva reserva, LocalDateTime fecha){
         reservas.realizarCheckin(reserva, fecha);

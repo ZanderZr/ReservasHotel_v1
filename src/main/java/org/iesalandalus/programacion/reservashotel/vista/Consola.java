@@ -26,7 +26,7 @@ public class Consola {
         do {
             System.out.println("Elige una opción insertando el número de dicha opción:");
             numOpcion = Entrada.entero();
-        } while (numOpcion>13 || numOpcion<1);
+        } while (numOpcion>15 || numOpcion<1);
 
         switch (numOpcion){
             case 1:
@@ -67,6 +67,12 @@ public class Consola {
                 break;
             case 13:
                 opcion = Opcion.CONSULTAR_DISPONIBILIDAD;
+                break;
+            case 14:
+                opcion = Opcion.REALIZAR_CHECKIN;
+                break;
+            case 15:
+                opcion = Opcion.REALIZAR_CHECKOUT;
                 break;
         }
 
