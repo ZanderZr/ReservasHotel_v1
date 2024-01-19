@@ -1,9 +1,6 @@
 package org.iesalandalus.programacion.reservashotel.modelo;
 
-import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
-import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
-import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
-import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.*;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.Habitaciones;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.Huespedes;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.Reservas;
@@ -26,11 +23,27 @@ public class Modelo {
 
     public Modelo() {
     }
+    public void pruebas() throws OperationNotSupportedException {
+        Huesped huesped1 = new Huesped("jojo", "666777666", "j0@gmail.com", "76660251D", LocalDate.now().minusYears(20));
+        Huesped huesped2 = new Huesped("jaja", "666777667", "ja@gmail.com", "76660252X", LocalDate.now().minusYears(20));
+        huespedes.insertar(huesped1);
+        huespedes.insertar(huesped2);
 
-    public void comenzar() {
+        Habitacion habitacion1 = new Habitacion(1,1,50,TipoHabitacion.SIMPLE);
+        Habitacion habitacion2 = new Habitacion(2,2,50,TipoHabitacion.DOBLE);
+        habitaciones.insertar(habitacion1);
+        habitaciones.insertar(habitacion2);
+
+        Reserva reserva1 = new Reserva(huesped1, habitacion1, Regimen.PENSION_COMPLETA, LocalDate.now(), LocalDate.now().plusDays(1), 1);
+        Reserva reserva2 = new Reserva(huesped1, habitacion2, Regimen.MEDIA_PENSION, LocalDate.now(), LocalDate.now().plusDays(1), 1);
+        reservas.insertar(reserva1);
+        reservas.insertar(reserva2);
+    }
+    public void comenzar() throws OperationNotSupportedException {
         huespedes = new Huespedes(CAPACIDAD);
         habitaciones = new Habitaciones(CAPACIDAD);
         reservas = new Reservas(CAPACIDAD);
+        pruebas();
     }
 
     public void terminar() {

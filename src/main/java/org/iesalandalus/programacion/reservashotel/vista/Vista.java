@@ -26,12 +26,15 @@ public class Vista {
     }
 
     public void comenzar() {
+        Opcion opcion;
         do {
             Consola.mostrarMenu();
-            ejecutarOpcion(Consola.elegirOpcion());
-        } while (Consola.elegirOpcion() != Opcion.SALIR);
+            opcion = Consola.elegirOpcion();
+            ejecutarOpcion(opcion);
+        } while (opcion != Opcion.SALIR);
         terminar();
     }
+
 
     public void terminar() {
         System.out.println("Gracias por utilizar nuestra aplicación. ¡Hasta pronto!");
@@ -74,7 +77,8 @@ public class Vista {
 
         try {
             Huesped nuevoHuesped = Consola.leerHuesped();
-            if (controlador.buscar(nuevoHuesped) == null) {
+            Huesped[] huespedes = controlador.getHuespedes();
+            if (!huespedes.equals(nuevoHuesped)) {
                 try {
                     controlador.insertar(nuevoHuesped);
                     System.out.println("Huésped insertado correctamente.");
@@ -135,8 +139,8 @@ public class Vista {
     private void insertarHabitacion() {
         try {
             Habitacion nuevaHabitacion = Consola.leerHabitacion();
-
-            if (controlador.buscar(nuevaHabitacion) == null) {
+            Habitacion[] habitaciones = controlador.getHabitaciones();
+            if (!habitaciones.equals(nuevaHabitacion)) {
                 try {
                     controlador.insertar(nuevaHabitacion);
                     System.out.println("Habitacion insertada correctamente.");
@@ -197,7 +201,7 @@ public class Vista {
     private void insertarReserva() {
         try {
             Reserva reservaFicticia = Consola.leerReserva();
-
+            Reserva[] reservas = controlador.getReservas();
             if (reservaFicticia == null) {
                 System.out.println("No se pudo leer la reserva.");
                 return;
@@ -217,15 +221,17 @@ public class Vista {
                 throw new NoSuchElementException("La habitación con el identificador proporcionado no se encuentra en el sistema.");
             }
 
-            Reserva nuevaReserva = new Reserva(huespedReal, habitacionReal, reservaFicticia.getRegimen(),
-                    reservaFicticia.getFechaInicioReserva(), reservaFicticia.getFechaFinReserva(), reservaFicticia.getNumeroPersonas());
+            Reserva nuevaReserva = new Reserva(huespedReal, habitacionReal, reservaFicticia.getRegimen(), reservaFicticia.getFechaInicioReserva(), reservaFicticia.getFechaFinReserva(), reservaFicticia.getNumeroPersonas());
 
+            if (nuevaReserva.getNumeroPersonas()< 0 || nuevaReserva.getNumeroPersonas() > nuevaReserva.getHabitacion().getTipoHabitacion().getNumeroMaximoPersonas()){
+                insertarReserva();
+            }
             Habitacion habitacionDeseada = nuevaReserva.getHabitacion();
             Habitacion habitacionDisponible = consultarDisponibilidad(habitacionDeseada.getTipoHabitacion(), nuevaReserva.getFechaInicioReserva(), nuevaReserva.getFechaFinReserva());
 
             if (habitacionDisponible != null) {
                 nuevaReserva.setHabitacion(habitacionDisponible);
-                if (controlador.buscar(nuevaReserva) == null) {
+                if (!reservas.equals(reservaFicticia)) {
                     try {
                         controlador.insertar(nuevaReserva);
                         System.out.println("Reserva insertada correctamente.");
@@ -242,7 +248,6 @@ public class Vista {
             System.out.println(e.getMessage());
         }
     }
-
     private void listarReservas(Huesped huesped) {
         try {
             Reserva[] reservasDelHuesped = controlador.getReservas(huesped);
@@ -344,9 +349,7 @@ public class Vista {
             if (habitacion.getTipoHabitacion().equals(tipoHabitacion)) {
                 boolean estaDisponible = true;
                 for (Reserva reserva : controlador.getReservas()) {
-                    if (reserva.getHabitacion().equals(habitacion) &&
-                            !reserva.getFechaFinReserva().isBefore(fechaInicio) &&
-                            !reserva.getFechaInicioReserva().isAfter(fechaFin)) {
+                    if (reserva.getHabitacion().equals(habitacion) && !reserva.getFechaFinReserva().isBefore(fechaInicio) && !reserva.getFechaInicioReserva().isAfter(fechaFin)) {
                         estaDisponible = false;
                         break;
                     }
@@ -361,52 +364,77 @@ public class Vista {
     }
 
     private int getNumElementosNoNulos(Reserva[] reservas) {
-        return 1;
-    }
-
-    private void realizarCheckin() throws NoSuchElementException{
-        System.out.println("introduce el huesped que ha realizado la reserva");
-        Huesped huesped = controlador.buscar(Consola.getHuespedPorDni());
-        Reserva[] reservasHuesped = controlador.getReservas(huesped);
-        if (reservasHuesped.length > 1){
-            System.out.println("Elija a que reserva quiere hacer el checkin introduciendo su numero:");
-            for (int i = 0; i < reservasHuesped.length; i++){
-                System.out.println(i + ".- " + reservasHuesped.toString());
-            }
-            int eleccion = Entrada.entero();
-            if (eleccion >= 0 && eleccion < reservasHuesped.length) {
-                controlador.realizarCheckin(reservasHuesped[eleccion], LocalDateTime.now());
-            } else {
-                throw new NoSuchElementException("Número de reserva no válido.");
-            }
-        } else if (reservasHuesped.length == 1) {
-            controlador.realizarCheckin(reservasHuesped[0], LocalDateTime.now());
-        } else {
-            throw new NoSuchElementException("No se encontraron reservas para el huésped proporcionado.");
+        int num= 0;
+        for (Reserva reserva : reservas){
+            num++;
         }
+        return num;
     }
 
-    private void realizarCheckout() throws NoSuchElementException {
+    private void realizarCheckin() {
         System.out.println("Introduce el DNI del huésped que ha realizado la reserva");
-        Huesped huesped = controlador.buscar(Consola.getHuespedPorDni());
-        Reserva[] reservasHuesped = controlador.getReservas(huesped);
-        if (reservasHuesped.length > 1){
-            System.out.println("Elija a qué reserva quiere hacer el checkout introduciendo su número:");
-            for (int i = 0; i < reservasHuesped.length; i++){
-                System.out.println(i + ".- " + reservasHuesped[i].toString());
-            }
-            int eleccion = Entrada.entero();
-            if (eleccion >= 0 && eleccion < reservasHuesped.length) {
-                controlador.realizarCheckout(reservasHuesped[eleccion], LocalDateTime.now());
+        try {
+            Huesped huesped = controlador.buscar(Consola.getHuespedPorDni());
+            Reserva[] reservasHuesped = controlador.getReservas(huesped);
+
+            if (reservasHuesped.length > 0) {
+                int i = 0;
+                if (reservasHuesped.length > 1) {
+                    System.out.println("Elija a qué reserva quiere hacer el checkin introduciendo su número:");
+                    for (Reserva reserva : reservasHuesped) {
+                        System.out.println(i + ".- " + reserva.toString());
+                        i++;
+                    }
+                    int eleccion = Entrada.entero();
+                    if (eleccion >= 0 && eleccion < reservasHuesped.length) {
+                        controlador.realizarCheckin(reservasHuesped[eleccion], LocalDateTime.now());
+                    } else {
+                        System.out.println("Número de reserva no válido. Por favor, inténtalo de nuevo.");
+                        realizarCheckin();
+                    }
+                } else {
+                    controlador.realizarCheckin(reservasHuesped[0], LocalDateTime.now());
+                }
             } else {
-                throw new NoSuchElementException("Número de reserva no válido.");
+                System.out.println("No se encontraron reservas para el huésped proporcionado. Por favor, introduce un DNI válido.");
+                realizarCheckin();
             }
-        } else if (reservasHuesped.length == 1) {
-            controlador.realizarCheckout(reservasHuesped[0], LocalDateTime.now());
-        } else {
-            throw new NoSuchElementException("No se encontraron reservas para el huésped proporcionado.");
+        } catch (NoSuchElementException e) {
+            System.out.println("No se encontraron reservas para el huésped proporcionado. Por favor, introduce un DNI válido.");
         }
     }
 
+    private void realizarCheckout() {
+        System.out.println("Introduce el DNI del huésped que ha realizado la reserva");
+
+        try {
+
+            Huesped huesped = controlador.buscar(Consola.getHuespedPorDni());
+            Reserva[] reservasHuesped = controlador.getReservas(huesped);
+
+            if (reservasHuesped.length > 0) {
+                if (reservasHuesped.length > 1) {
+                    System.out.println("Elija a qué reserva quiere hacer el checkout introduciendo su número:");
+                    for (int i = 0; i < reservasHuesped.length; i++) {
+                        System.out.println(i + ".- " + reservasHuesped[i].toString());
+                    }
+                    int eleccion = Entrada.entero();
+                    if (eleccion >= 0 && eleccion < reservasHuesped.length) {
+                        controlador.realizarCheckout(reservasHuesped[eleccion], LocalDateTime.now());
+                    } else {
+                        System.out.println("Número de reserva no válido. Por favor, inténtalo de nuevo.");
+                        realizarCheckout();
+                    }
+                } else {
+                    controlador.realizarCheckout(reservasHuesped[0], LocalDateTime.now());
+                }
+            } else {
+                System.out.println("No se encontraron reservas para el huésped proporcionado. Por favor, introduce un DNI válido.");
+                realizarCheckout();
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("No se encontraron reservas para el huésped proporcionado. Por favor, introduce un DNI válido.");
+        }
+    }
 
 }

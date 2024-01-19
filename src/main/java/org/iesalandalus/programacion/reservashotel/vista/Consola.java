@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Consola {
-    private Consola(){
+    private Consola() {
 
     }
 
@@ -20,15 +20,15 @@ public class Consola {
         }
     }
 
-    public static Opcion elegirOpcion(){
+    public static Opcion elegirOpcion() {
         Opcion opcion = null;
         int numOpcion;
         do {
             System.out.println("Elige una opción insertando el número de dicha opción:");
             numOpcion = Entrada.entero();
-        } while (numOpcion>15 || numOpcion<1);
+        } while (numOpcion > 15 || numOpcion < 1);
 
-        switch (numOpcion){
+        switch (numOpcion) {
             case 1:
                 opcion = Opcion.SALIR;
                 break;
@@ -116,14 +116,16 @@ public class Consola {
 
 
     public static Huesped getHuespedPorDni() {
-
         System.out.print("Introduce el DNI del huésped: ");
         String dni = Entrada.cadena();
 
-        return new Huesped("Nombre Ficticio", "666777888", "correoficticio@gmail.com", dni, LocalDate.now().minusYears(20));
-
+        try {
+            return new Huesped("Nombre Ficticio", "666777888", "correoficticio@gmail.com", dni, LocalDate.now().minusYears(20));
+        } catch (IllegalArgumentException e) {
+            System.out.println("DNI introducido no es válido. Por favor, inténtalo de nuevo.");
+            return getHuespedPorDni();
+        }
     }
-
 
     public static LocalDate leerFecha(String mensaje) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Reserva.FORMATO_FECHA_RESERVA);
@@ -189,12 +191,12 @@ public class Consola {
     public static Habitacion leerHabitacionPorIdentificador() throws IllegalArgumentException {
         int planta;
         int puerta;
-        do{
+        do {
             System.out.println("Introduce el número de planta de la habitación (1-3):");
             planta = Entrada.entero();
         } while (planta < 1 || planta > 3);
 
-        do{
+        do {
             System.out.println("Introduce el número de puerta de la habitación (1-15):");
             puerta = Entrada.entero();
         } while (puerta < 1 || puerta > 15);
@@ -209,7 +211,7 @@ public class Consola {
         do {
             System.out.println("Tipo de habitación:\n1.- Suite\n2.- Simple\n3.- Doble\n4.- Triple");
 
-                opcionTipoHab = Entrada.entero();
+            opcionTipoHab = Entrada.entero();
 
         } while (opcionTipoHab < 1 || opcionTipoHab > 4);
 
@@ -231,15 +233,15 @@ public class Consola {
     }
 
 
-    public static Regimen leerRegimen(){
+    public static Regimen leerRegimen() {
         Regimen regimen = null;
         int opcionReg;
-        do{
+        do {
             System.out.println("Tipo de regimen:\n1.- Solo alojamiento\n2.- Alojamiento y desayuno\n3.- Media pensión\n4.- Pension completa");
             opcionReg = Entrada.entero();
-        } while (opcionReg<1 || opcionReg>4);
+        } while (opcionReg < 1 || opcionReg > 4);
 
-        switch (opcionReg){
+        switch (opcionReg) {
             case 1:
                 regimen = Regimen.SOLO_ALOJAMIENTO;
                 break;
@@ -257,21 +259,30 @@ public class Consola {
     }
 
     public static Reserva leerReserva() {
-       int numeroPersonas = 0;
+        int numeroPersonas = 0;
+        LocalDate fechaInicioReserva;
+        LocalDate fechaFinReserva;
+
         try {
             Huesped huesped = getHuespedPorDni();
             Habitacion habitacion = leerHabitacionPorIdentificador();
             Regimen regimen = leerRegimen();
-            LocalDate fechaInicioReserva = leerFecha("Introduce la fecha de inicio de la reserva:");
-            LocalDate fechaFinReserva = leerFecha("Introduce la fecha de fin de la reserva:");
+
+
+            do {
+                fechaInicioReserva = leerFecha("Introduce la fecha de inicio de la reserva:");
+            } while (fechaInicioReserva.isBefore(LocalDate.now()));
+
+            do {
+                fechaFinReserva = leerFecha("Introduce la fecha de fin de la reserva:");
+
+            } while (fechaFinReserva.isBefore(fechaInicioReserva));
+
             System.out.println("Numero de personas:");
             numeroPersonas = Entrada.entero();
-            if (numeroPersonas <= 0) {
-                throw new IllegalArgumentException("El número de personas debe ser mayor que cero.");
-            }
-
 
             return new Reserva(huesped, habitacion, regimen, fechaInicioReserva, fechaFinReserva, numeroPersonas);
+
         } catch (IllegalArgumentException e) {
             System.out.println("Ha ocurrido un error al leer la reserva: " + e.getMessage());
             return null;

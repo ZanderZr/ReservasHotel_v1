@@ -8,6 +8,7 @@ import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -33,15 +34,12 @@ public class Reservas {
         }
         return copiaProfunda;
     }
-
     public int getCapacidad() {
         return capacidad;
     }
-
     public int getTamano() {
         return tamano;
     }
-
     public void insertar(Reserva reserva) throws OperationNotSupportedException {
         if (reserva == null) {
             throw new IllegalArgumentException("No se puede insertar una reserva nula.");
@@ -149,7 +147,12 @@ public class Reservas {
         try {
             Reserva reservaEncontrada = buscar(reserva);
             if (reservaEncontrada != null) {
-                reservaEncontrada.setCheckIn(fechaHora);
+                if (reservaEncontrada.getCheckIn() == null) {
+                    reservaEncontrada.setCheckIn(fechaHora);
+                    System.out.println("Checkin realizado con éxito: " + fechaHora.format(DateTimeFormatter.ofPattern(Reserva.FORMATO_FECHA_HORA_RESERVA)));
+                } else {
+                    System.out.println("Ya se ha realizado el check-in para esta reserva.");
+                }
             } else {
                 throw new NoSuchElementException("La reserva no se encuentra en la colección.");
             }
@@ -162,7 +165,12 @@ public class Reservas {
         try {
             Reserva reservaEncontrada = buscar(reserva);
             if (reservaEncontrada != null) {
-                reservaEncontrada.setCheckOut(fechaHora);
+                if (reservaEncontrada.getCheckIn() != null && reservaEncontrada.getCheckOut() == null) {
+                    reservaEncontrada.setCheckOut(fechaHora);
+                    System.out.println("Checkout realizado con éxito: " + fechaHora.format(DateTimeFormatter.ofPattern(Reserva.FORMATO_FECHA_HORA_RESERVA)));
+                } else {
+                    System.out.println("No se puede realizar el checkout sin haber hecho el checkin.");
+                }
             } else {
                 throw new NoSuchElementException("La reserva no se encuentra en la colección.");
             }

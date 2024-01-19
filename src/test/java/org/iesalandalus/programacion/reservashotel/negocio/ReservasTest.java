@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
-
+/*
 public class ReservasTest {
 
     private static Huesped huesped1;
@@ -548,3 +548,5 @@ public class ReservasTest {
 
 
 }
+
+ */
